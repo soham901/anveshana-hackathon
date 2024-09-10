@@ -28,7 +28,11 @@
     },
     "plugins": [
       "expo-router",
-      "expo-localization"
+      "expo-localization",
+      "expo-asset",
+      {
+        "assets": ["./assets/images/bg.jpeg"]
+      }
     ],
     "experiments": {
       "typedRoutes": true
