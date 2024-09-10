@@ -1,6 +1,6 @@
 import React from "react";
 import { View, ImageBackground, StyleSheet, TextInput } from "react-native";
-import { Input, Button, Text } from "@rneui/themed";
+import { Button, Text } from "@rneui/themed";
 import { useForm, Controller } from "react-hook-form";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -95,8 +95,6 @@ const SignupScreen = () => {
                 onChangeText={onChange}
                 value={value}
                 style={styles.input}
-                // containerStyle={styles.input}
-                // inputContainerStyle={styles.inputContainer}
               />
             )}
             name="last_name"
@@ -115,8 +113,6 @@ const SignupScreen = () => {
                 onChangeText={onChange}
                 value={value}
                 style={styles.input}
-                // containerStyle={styles.input}
-                // inputContainerStyle={styles.inputContainer}
               />
             )}
             name="username"
@@ -135,8 +131,6 @@ const SignupScreen = () => {
                 onChangeText={onChange}
                 value={value}
                 style={styles.input}
-                // containerStyle={styles.input}
-                // inputContainerStyle={styles.inputContainer}
               />
             )}
             name="email"
@@ -155,56 +149,18 @@ const SignupScreen = () => {
                 onChangeText={onChange}
                 value={value}
                 style={styles.input}
-                // containerStyle={styles.input}
-                // inputContainerStyle={styles.inputContainer}
               />
             )}
             name="password"
           />
           {errors.password && <Text>This is required.</Text>}
 
-          <Button title="Submit" onPress={handleSubmit(onSubmit)} />
-
-          {/* <Input
-            placeholder="Email"
-            containerStyle={styles.input}
-            inputContainerStyle={styles.inputContainer}
-          />
-          <Input
-            placeholder="Password"
-            secureTextEntry
-            containerStyle={styles.input}
-            inputContainerStyle={styles.inputContainer}
-          /> */}
-          {/* <Button
-            onPress={async () => {
-              if (true) {
-                // save token in local storage
-                try {
-                  const res = await axios.post(
-                    "http://localhost:8000/register-user/",
-                    {
-                      username: "",
-                      email: "",
-                      password: "",
-                      first_name: "",
-                      last_name: "",
-                    }
-                  );
-                  console.log(res);
-                  await AsyncStorage.setItem("token", "tokenxyz12345");
-                } catch (error) {
-                  console.log(error);
-                }
-
-                // navigate to crops screen
-                router.push("/crops");
-              }
-            }}
-            title="Sign Up"
+          <Button
             buttonStyle={styles.loginButton}
-            containerStyle={styles.buttonContainer}
-          /> */}
+            title="Submit"
+            onPress={handleSubmit(onSubmit)}
+          />
+
           <HorizontalLine color="#717171" gap={24} />
           <ThemedView
             style={{
@@ -259,7 +215,7 @@ const styles = StyleSheet.create({
   input: {
     paddingVertical: 4,
     paddingHorizontal: 16,
-    borderColor: "#252525",
+    borderColor: "#2c2c2c",
     borderWidth: 1,
     borderRadius: 25,
     marginVertical: 8,

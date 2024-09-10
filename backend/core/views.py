@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from .serializers import UserSerializer
 from rest_framework import viewsets, status, permissions
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, RegisterSerializer, FarmerSerializer, ListBuyersSerializer, RegisterBuyerSerializer
+from .serializers import UserSerializer, RegisterSerializer, FarmerSerializer, ListBuyersSerializer, RegisterBuyerSerializer, ProfileSerializer
 
 from .models import Buyer, Crop, CropCategory, CropImage, Farmer, Transaction
 
@@ -103,3 +103,12 @@ class RegisterAsBuyerViewSet(viewsets.GenericViewSet):
     queryset = Buyer.objects.all()
     serializer_class = RegisterBuyerSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)

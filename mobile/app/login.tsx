@@ -1,13 +1,63 @@
-import React from "react";
-import { View, ImageBackground, StyleSheet } from "react-native";
-import { Input, Button, Text } from "@rneui/themed";
+import React, { useState } from "react";
+import { View, ImageBackground, StyleSheet, TextInput } from "react-native";
+import { Button, Text } from "@rneui/themed";
+import { useForm, Controller } from "react-hook-form";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import HorizontalLine from "@/components/HorizontalLine";
 
-const LoginScreen = () => {
+import { apiURL } from "./constants";
+
+const Screen = () => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  type Data = {
+    username: string;
+    password: string;
+  };
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const onSubmit = async (data: Data) => {
+    setIsSubmitting(true);
+
+    try {
+      console.log(data);
+
+      const res = await fetch(`${apiURL}/token/`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const response = await res.json();
+
+      if (response.access) {
+        await AsyncStorage.setItem("token", response.access);
+        router.push("/");
+      } else {
+        alert("Error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    setIsSubmitting(false);
+  };
+
   return (
     <ImageBackground
       source={require("@/assets/images/bg.jpeg")}
@@ -18,35 +68,49 @@ const LoginScreen = () => {
           Welcome Back
         </Text>
         <View style={styles.form}>
-          <Input
-            placeholder="Email"
-            containerStyle={styles.input}
-            inputContainerStyle={styles.inputContainer}
-          />
-          <Input
-            placeholder="Password"
-            secureTextEntry
-            containerStyle={styles.input}
-            inputContainerStyle={styles.inputContainer}
-          />
-          <Button
-            onPress={async () => {
-              if (true) {
-                // save token in local storage
-                try {
-                  await AsyncStorage.setItem("token", "tokenxyz12345");
-                } catch (error) {
-                  console.log(error);
-                }
-
-                // navigate to crops screen
-                router.push("/crops");
-              }
+          <Controller
+            control={control}
+            rules={{
+              required: true,
             }}
-            title="Login"
-            buttonStyle={styles.loginButton}
-            containerStyle={styles.buttonContainer}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                placeholder="Username"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                style={styles.input}
+              />
+            )}
+            name="username"
           />
+          {errors.username && <Text>This is required.</Text>}
+
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                placeholder="Password"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                style={styles.input}
+              />
+            )}
+            name="password"
+          />
+          {errors.password && <Text>This is required.</Text>}
+
+          <Button
+            loading={isSubmitting}
+            buttonStyle={styles.loginButton}
+            title="Submit"
+            onPress={handleSubmit(onSubmit)}
+          />
+
           <HorizontalLine color="#717171" gap={24} />
           <ThemedView
             style={{
@@ -99,7 +163,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    marginBottom: 10,
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+    borderColor: "#2c2c2c",
+    borderWidth: 1,
+    borderRadius: 25,
+    marginVertical: 8,
+    fontSize: 18,
   },
   inputContainer: {
     color: "#252525",
@@ -123,4 +193,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default Screen;

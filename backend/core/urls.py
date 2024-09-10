@@ -6,10 +6,12 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from .views import RegisterViewSet, UserViewSet, ListFarmersViewSet, RegisterAsFarmerViewSet, ListBuyersViewSet, RegisterAsBuyerViewSet
+from .views import RegisterViewSet, UserViewSet, ListFarmersViewSet, RegisterAsFarmerViewSet, ListBuyersViewSet, RegisterAsBuyerViewSet, ProfileViewSet
 
 
 router = routers.DefaultRouter()
+
+router.register(r'profile', ProfileViewSet, basename='profile')
 
 router.register(r'register-user', RegisterViewSet, basename='register')
 router.register(r'users', UserViewSet, basename='users')

@@ -15,6 +15,7 @@ import { I18nextProvider } from "react-i18next";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Platform, StatusBar, StyleSheet } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
+import AuthProvider from "./AuthProvider";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -38,13 +39,15 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <I18nextProvider i18n={i18n}>
         <ThemedView style={styles.container}>
-          <Stack screenOptions={{ animation: "ios" }}>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            {/* <Stack.Screen name="(tabs)/crops/index" options={{ headerTitle: "Crops" }} /> */}
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="signup" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
+          <AuthProvider>
+            <Stack screenOptions={{ animation: "ios" }}>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              {/* <Stack.Screen name="(tabs)/crops/index" options={{ headerTitle: "Crops" }} /> */}
+              <Stack.Screen name="login" options={{ headerShown: false }} />
+              <Stack.Screen name="signup" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </AuthProvider>
         </ThemedView>
       </I18nextProvider>
     </ThemeProvider>

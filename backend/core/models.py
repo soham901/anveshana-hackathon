@@ -8,10 +8,12 @@ class Farmer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     phone_no = models.CharField(max_length=20)
     location = models.CharField(max_length=255)
-    profile_pic_url = models.URLField(blank=True)
+    profile_pic = models.ImageField(blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     languages_spoken = models.CharField(max_length=255)
-    preferred_quantity_unit = models.CharField(max_length=20)
+    preferred_quantity_unit = models.CharField(max_length=20, choices=[
+        ('kg', 'Kilograms'),
+    ])
 
     farm_size = models.FloatField(validators=[MinValueValidator(0)])
     farming_since = models.DateField()
@@ -25,7 +27,7 @@ class Buyer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     phone_no = models.CharField(max_length=20)
     location = models.CharField(max_length=255)
-    profile_pic_url = models.URLField(blank=True)
+    profile_pic = models.ImageField(blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     languages_spoken = models.CharField(max_length=255)
     preferred_quantity_unit = models.CharField(max_length=20)
@@ -60,8 +62,8 @@ class Crop(models.Model):
     market_availability = models.BooleanField(default=True)
     storage_instruction = models.TextField()
     description = models.TextField()
-    images_urls = models.ManyToManyField(CropImage, related_name='crops')
-    cover_img_url = models.ImageField()
+    images = models.ManyToManyField(CropImage, related_name='crops')
+    cover_img = models.ImageField()
 
     def __str__(self):
         return f"{self.name} ({self.variety}) by {self.farmer.user.username}"
