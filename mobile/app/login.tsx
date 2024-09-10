@@ -60,7 +60,11 @@ const LoginScreen = () => {
             <ThemedText style={styles.orText}>
               Don't have an account?
             </ThemedText>
-            <Button title="Sign Up" buttonStyle={styles.signUpButton} />
+            <Button
+              title="Sign Up"
+              buttonStyle={styles.signUpButton}
+              onPress={() => router.push("/signup")}
+            />
           </ThemedView>
         </View>
       </View>

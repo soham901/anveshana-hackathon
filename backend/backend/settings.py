@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-m-#7v@)=l0yr+#!=ynq(vbbugo=jbxr%=&%ng4dw7uuvai2cul"
+SECRET_KEY = "django-insecure-sof(5u=-dbxjhejqg7yq70rb547==@2!+tsp4y&56!hk8+g-(u"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -26,12 +26,18 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    # local
+    "core",
+
+    # third party
     "rest_framework",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -105,16 +111,43 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
 }
+
+# CORS_ALLOWED_ORIGINS = ["*"]
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_METHODS = (
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+)
+
+CORS_ALLOW_HEADERS = (
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+)
