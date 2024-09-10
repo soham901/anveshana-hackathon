@@ -8,6 +8,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { Button, Card, Icon, SearchBar, Text } from "@rneui/themed";
 import { Dialog } from "@rneui/themed";
 import { useState } from "react";
+import { Link } from "expo-router";
 
 export default function HomeScreen() {
   const [visible, setVisible] = useState(false);
@@ -33,7 +34,9 @@ export default function HomeScreen() {
         <Text>Dialog body text. Add relevant information here.</Text>
       </Dialog>
 
-      <Crops />
+      <Link href={"/login"}>
+        <ThemedText>Login</ThemedText>
+      </Link>
     </ParallaxScrollView>
   );
 }
