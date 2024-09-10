@@ -44,10 +44,6 @@ class CropCategory(models.Model):
         return self.name
 
 
-class CropImage(models.Model):
-    source = models.ImageField(null=True, blank=True)
-
-
 class Crop(models.Model):
     category = models.ForeignKey(CropCategory, on_delete=models.CASCADE, related_name='crops')
     name = models.CharField(max_length=100)
@@ -62,11 +58,36 @@ class Crop(models.Model):
     market_availability = models.BooleanField(default=True)
     storage_instruction = models.TextField()
     description = models.TextField()
-    images = models.ManyToManyField(CropImage, related_name='crops')
+    full_img = models.ImageField(null=True, blank=True)
     cover_img = models.ImageField()
 
     def __str__(self):
         return f"{self.name} ({self.variety}) by {self.farmer.user.username}"
+
+
+class Order(models.Model):
+    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='orders')
+    buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE, related_name='orders')
+    crop = models.ForeignKey(Crop, on_delete=models.CASCADE, related_name='orders')
+    quantity = models.FloatField(validators=[MinValueValidator(0)])
+    price_per_kg = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    total_price = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default='pending', choices=[
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('canceled', 'Canceled'),
+    ])
+    farmer_agreed = models.BooleanField(default=False)
+    buyer_agreed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Order {self.id}: {self.crop.name} - {self.buyer.user.username}"
+
+    def save(self, *args, **kwargs):
+        if not self.total_price:
+            self.total_price = self.quantity * self.price_per_kg
+        super().save(*args, **kwargs)
 
 
 class Transaction(models.Model):
@@ -76,8 +97,7 @@ class Transaction(models.Model):
         ('canceled', 'Canceled'),
     ]
 
-    crop = models.ForeignKey(Crop, on_delete=models.CASCADE, related_name='transactions')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='transactions')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orders')
     quantity = models.FloatField(validators=[MinValueValidator(0)])
     price_per_kg = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     total_price = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
@@ -91,3 +111,4 @@ class Transaction(models.Model):
         if not self.total_price:
             self.total_price = self.quantity * self.price_per_kg
         super().save(*args, **kwargs)
+

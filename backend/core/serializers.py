@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-from .models import Buyer, Crop, CropCategory, Farmer, CropImage, Transaction
+from .models import Buyer, Crop, CropCategory, Farmer, Transaction, Order
 
 
 class UFarmerSerializer(serializers.ModelSerializer):
@@ -101,3 +101,31 @@ class RegisterBuyerSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
+
+
+
+class CropSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Crop
+        fields = "__all__"
+
+
+class CropDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Crop
+        fields = "__all__"
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = "__all__"
+        read_only_fields = ['id', 'created_at', 'updated_at', 'status', 'total_price', 'farmer_agreed', 'buyer_agreed', 'buyer']
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        buyer = Buyer.objects.get(user=user)
+        validated_data['buyer'] = buyer
+        
+        order = Order.objects.create(**validated_data)
+        return order

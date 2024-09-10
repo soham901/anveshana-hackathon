@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Buyer, Crop, CropCategory, Farmer, Transaction, CropImage
+from .models import Buyer, Crop, CropCategory, Farmer, Transaction
 
 
 admin.site.register(Buyer)
@@ -7,7 +7,6 @@ admin.site.register(Crop)
 admin.site.register(CropCategory)
 admin.site.register(Farmer)
 admin.site.register(Transaction)
-admin.site.register(CropImage)
 
 admin.site.site_header = "Fasal Mandi"
 admin.site.site_title = "Fasal Mandi Admin Portal"
