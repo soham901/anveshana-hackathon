@@ -2,12 +2,8 @@ import React from "react";
 import { View, ImageBackground, StyleSheet } from "react-native";
 import { Input, Button, Text } from "@rneui/themed";
 import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ThemedView } from "@/components/ThemedView";
-import { ThemedText } from "@/components/ThemedText";
-import HorizontalLine from "@/components/HorizontalLine";
 
-const LoginScreen = () => {
+const SignupPage = () => {
   return (
     <ImageBackground
       source={require("@/assets/images/bg.jpeg")}
@@ -15,9 +11,14 @@ const LoginScreen = () => {
     >
       <View style={styles.container}>
         <Text h2 style={styles.title}>
-          Welcome Back
+          Get Started
         </Text>
         <View style={styles.form}>
+          <Input
+            placeholder="Name"
+            containerStyle={styles.input}
+            inputContainerStyle={styles.inputContainer}
+          />
           <Input
             placeholder="Email"
             containerStyle={styles.input}
@@ -30,39 +31,16 @@ const LoginScreen = () => {
             inputContainerStyle={styles.inputContainer}
           />
           <Button
-            onPress={async () => {
-              if (true) {
-                // save token in local storage
-                try {
-                  await AsyncStorage.setItem("token", "tokenxyz12345");
-                } catch (error) {
-                  console.log(error);
-                }
-
-                // navigate to crops screen
-                router.push("/crops");
-              }
-            }}
-            title="Login"
-            buttonStyle={styles.loginButton}
+            title="Sign Up"
+            buttonStyle={styles.signUpButton}
             containerStyle={styles.buttonContainer}
           />
-          <HorizontalLine color="#717171" gap={24} />
-          <ThemedView
-            style={{
-              backgroundColor: "transparent",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexDirection: "row",
-            }}
-          >
-            <ThemedText style={styles.orText}>
-              Don't have an account?
-            </ThemedText>
-            <Button title="Sign Up" buttonStyle={styles.signUpButton} />
-          </ThemedView>
         </View>
+        <Button
+          onPress={() => router.push("/login")}
+          title="Sign Up"
+          style={styles.signUpButton}
+        />
       </View>
     </ImageBackground>
   );
@@ -98,25 +76,60 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   inputContainer: {
-    color: "#252525",
     borderBottomWidth: 0,
-  },
-  loginButton: {
-    backgroundColor: "#2196F3",
-    borderRadius: 25,
   },
   signUpButton: {
     backgroundColor: "#4CAF50",
     borderRadius: 25,
-    paddingHorizontal: 18,
   },
   buttonContainer: {
     marginTop: 10,
   },
   orText: {
-    color: "#252525",
+    color: "white",
     marginVertical: 10,
+  },
+  socialButtons: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  socialButton: {
+    backgroundColor: "#3b5998",
+    borderRadius: 25,
+    width: 50,
+    height: 50,
+  },
+  socialButtonContainer: {
+    marginHorizontal: 10,
   },
 });
 
-export default LoginScreen;
+export default SignupPage;
+
+// import React from "react";
+// import { Button } from "react-native";
+// import { useTranslation } from "react-i18next";
+// import { ThemedView } from "@/components/ThemedView";
+// import { ThemedText } from "@/components/ThemedText";
+
+// const LoginScreen = () => {
+//   const { t, i18n } = useTranslation();
+
+//   const changeLanguage = (lng: any) => {
+//     i18n.changeLanguage(lng);
+//   };
+
+//   return (
+//     <ThemedView>
+//       <ThemedText>{t("welcome")}</ThemedText>
+//       <ThemedText>{t("login")}</ThemedText>
+//       <ThemedText>{t("email")}</ThemedText>
+//       <ThemedText>{t("password")}</ThemedText>
+//       <Button title="English" onPress={() => changeLanguage("en")} />
+//       <Button title="Hindi" onPress={() => changeLanguage("hn")} />
+//       <Button title="Gujarati" onPress={() => changeLanguage("gj")} />
+//     </ThemedView>
+//   );
+// };
+
+// export default LoginScreen;

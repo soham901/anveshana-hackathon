@@ -8,32 +8,17 @@ i18next
         resources: {
             en: {
                 translation: {
-                    products: 'Products',
-                    login: 'Login',
-                    signup: 'Sign Up',
-                    email: 'Email',
-                    password: 'Password',
-                    submit: 'Submit'
+                    welcome: "Welcome"
                 }
             },
             gj: {
                 translation: {
-                    products: 'G Products',
-                    login: 'G Login',
-                    signup: 'G Sign Up',
-                    email: 'G Email',
-                    password: 'G Password',
-                    submit: 'G Submit'
+                    welcome: "સ્વાગત"
                 }
             },
             hn: {
                 translation: {
-                    products: 'H Products',
-                    login: 'H Login',
-                    signup: 'H Sign Up',
-                    email: 'H Email',
-                    password: 'H Password',
-                    submit: 'H Submit'
+                    welcome: "स्वागत"
                 }
             },
         },
