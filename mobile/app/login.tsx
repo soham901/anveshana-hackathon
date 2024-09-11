@@ -9,16 +9,19 @@ import { ThemedText } from "@/components/ThemedText";
 import HorizontalLine from "@/components/HorizontalLine";
 
 import { apiURL } from "./constants";
+import { useAuth } from "@/hooks/useAuth";
 
 const Screen = () => {
+  const { fetchProfile } = useAuth();
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      username: "",
-      password: "",
+      username: "sandip",
+      password: "Hello@123",
     },
   });
 
@@ -47,7 +50,7 @@ const Screen = () => {
 
       if (response.access) {
         await AsyncStorage.setItem("token", response.access);
-        router.push("/");
+        router.push("/dashboard");
       } else {
         alert("Error");
       }

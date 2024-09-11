@@ -10,3 +10,9 @@
 - [ ] Whereby API integration
 - [ ] SMS API integration
 - [ ] Chat API integration
+
+- [x] Seller profile page
+- [ ] Order form Page
+- [ ] add crops
+- [ ] Orders Page
+- [ ] Transaction Page

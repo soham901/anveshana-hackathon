@@ -13,6 +13,9 @@ class Farmer(models.Model):
     languages_spoken = models.CharField(max_length=255)
     preferred_quantity_unit = models.CharField(max_length=20, choices=[
         ('kg', 'Kilograms'),
+        ('qt', 'Quintals'),
+        ('g', 'Grams'),
+        ('ton', 'Tons'),
     ])
 
     farm_size = models.FloatField(validators=[MinValueValidator(0)])
@@ -66,9 +69,9 @@ class Crop(models.Model):
 
 
 class Order(models.Model):
-    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='orders')
-    buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE, related_name='orders')
-    crop = models.ForeignKey(Crop, on_delete=models.CASCADE, related_name='orders')
+    farmer = models.ForeignKey(Farmer, default=None, on_delete=models.SET_NULL, null=True, related_name='orders')
+    buyer = models.ForeignKey(Buyer, default=None, on_delete=models.SET_NULL, null=True, related_name='orders')
+    crop = models.ForeignKey(Crop, default=None, on_delete=models.SET_NULL, null=True, related_name='orders')
     quantity = models.FloatField(validators=[MinValueValidator(0)])
     price_per_kg = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     total_price = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
@@ -97,7 +100,7 @@ class Transaction(models.Model):
         ('canceled', 'Canceled'),
     ]
 
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orders')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orders', default=None, null=True)
     quantity = models.FloatField(validators=[MinValueValidator(0)])
     price_per_kg = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     total_price = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])

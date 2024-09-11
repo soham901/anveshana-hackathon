@@ -1,1 +1,1 @@
-export const apiURL = "https://q6vtwqgp-8000.inc1.devtunnels.ms"
+export const apiURL = "https://q6vtwqgp-8000.inc1.devtunnels.ms";

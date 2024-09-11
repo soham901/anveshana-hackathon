@@ -107,7 +107,11 @@ class LoginSerializer(serializers.Serializer):
 class CropSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crop
+        farmer_name = serializers.SerializerMethodField()
         fields = "__all__"
+
+    def get_farmer_name(self, obj):
+        return obj.farmer.user.username
 
 
 class CropDetailsSerializer(serializers.ModelSerializer):
@@ -129,3 +133,9 @@ class OrderSerializer(serializers.ModelSerializer):
         
         order = Order.objects.create(**validated_data)
         return order
+    
+
+class RegisterFarmerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Farmer
+        fields = '__all__'

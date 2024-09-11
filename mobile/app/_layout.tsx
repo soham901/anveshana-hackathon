@@ -44,6 +44,30 @@ export default function RootLayout() {
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               {/* <Stack.Screen name="(tabs)/crops/index" options={{ headerTitle: "Crops" }} /> */}
               <Stack.Screen name="login" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="crops/[id]"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="farmers/[id]"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="buyers/[id]"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="orders/[id]"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="register-as-farmer"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="vid-meeting"
+                options={{ headerShown: false }}
+              />
               <Stack.Screen name="signup" options={{ headerShown: false }} />
               <Stack.Screen name="+not-found" />
             </Stack>

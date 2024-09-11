@@ -1,4 +1,6 @@
+from decimal import Decimal
 from django.db.models import Q
+from rest_framework.views import APIView
 from rest_framework.decorators import action
 from django.db import transaction
 from rest_framework.response import Response
@@ -6,7 +8,7 @@ from rest_framework.serializers import ChoiceField
 from .serializers import OrderSerializer, UserSerializer
 from rest_framework import viewsets, status, permissions
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, RegisterSerializer, FarmerSerializer, ListBuyersSerializer, RegisterBuyerSerializer, ProfileSerializer, CropSerializer, CropDetailsSerializer
+from .serializers import UserSerializer, RegisterSerializer, FarmerSerializer, ListBuyersSerializer, RegisterBuyerSerializer, ProfileSerializer, CropSerializer, CropDetailsSerializer, RegisterFarmerSerializer
 
 from .models import Buyer, Crop, CropCategory, Farmer, Order, Transaction
 
@@ -60,35 +62,18 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class RegisterAsFarmerViewSet(viewsets.GenericViewSet):
-    # take all the fields from Farmer model and put the current user id in it
     queryset = Farmer.objects.all()
-    serializer_class = FarmerSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = RegisterFarmerSerializer
+    permission_classes = [permissions.AllowAny]
 
-    def create(self, request):
-        farmer = Farmer.objects.create(user=request.user)
-        farmer.save()
-        return Response(FarmerSerializer(farmer).data, status=status.HTTP_201_CREATED)
-    
-    def update(self, request, pk):
-        farmer = Farmer.objects.get(pk=pk)
-        farmer.user = request.user
-        farmer.save()
-        return Response(FarmerSerializer(farmer).data, status=status.HTTP_200_OK)
-    
-    def destroy(self, request, pk):
-        farmer = Farmer.objects.get(pk=pk)
-        farmer.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    
-    def list(self, request):
-        farmers = Farmer.objects.all()
-        return Response(FarmerSerializer(farmers, many=True).data, status=status.HTTP_200_OK)
-    
-    def retrieve(self, request, pk):
-        farmer = Farmer.objects.get(pk=pk)
-        return Response(FarmerSerializer(farmer).data, status=status.HTTP_200_OK)
-
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            farmer = Farmer.objects.create(**serializer.validated_data)
+            farmer.user = self.request.user
+            farmer.save()
+            return Response(FarmerSerializer(farmer).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ListFarmersViewSet(viewsets.ModelViewSet):
@@ -219,4 +204,43 @@ class OrderDetailsViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return Order.objects.filter((Q(buyer__user=user) | Q(farmer__user=user)))
-    
+
+
+
+class MakeProcurementView(APIView):
+    def post(self, request):
+        try:
+            print(request.data)
+
+            if not request.user:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': 'User is not logged in'})
+            
+            # get the buyer id from the jwt token
+            buyer_id = request.user.buyer.pk
+
+            # get the farmer id from request body
+            farmer_id = request.data.get('farmer_id')
+
+            # get the crop id from request body
+            crop_id = request.data.get('crop_id')
+
+            # get the quantity from request body
+            quantity = request.data.get('quantity')
+
+            # get the price per kg from request body
+            price_per_kg = request.data.get('price_per_kg')
+
+            # create a new order
+            order = Order.objects.create(
+                buyer_id=buyer_id,
+                farmer_id=farmer_id,
+                crop_id=int(crop_id),
+                quantity=quantity,
+                price_per_kg=Decimal(price_per_kg)
+            )
+            order.save()
+
+            return Response(status=status.HTTP_200_OK, data={'message': 'Order created successfully'})
+        
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': str(e)})
